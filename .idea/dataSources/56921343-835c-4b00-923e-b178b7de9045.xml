@@ -1035,7 +1035,7 @@ sys|schema||mysql.sys|localhost|TRIGGER|G</Grants>
       <AutoIntrospectionLevel>3</AutoIntrospectionLevel>
       <Current>1</Current>
       <LastIntrospectionLevel>3</LastIntrospectionLevel>
-      <LastIntrospectionLocalTimestamp>2026-01-20.10:37:20</LastIntrospectionLocalTimestamp>
+      <LastIntrospectionLocalTimestamp>2026-01-22.11:22:40</LastIntrospectionLocalTimestamp>
       <CollationName>utf8mb4_0900_ai_ci</CollationName>
     </schema>
     <schema id="300" parent="1" name="school__data">
@@ -1336,7 +1336,7 @@ DYNAMIC</Options>
       <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
     </key>
     <column id="356" parent="312" name="id">
-      <AutoIncrement>1</AutoIncrement>
+      <AutoIncrement>2</AutoIncrement>
       <Comment>宠物信息表主键ID</Comment>
       <NotNull>1</NotNull>
       <Position>1</Position>
@@ -1363,7 +1363,7 @@ DYNAMIC</Options>
       <StoredType>varchar(100)|0s</StoredType>
     </column>
     <column id="361" parent="312" name="age">
-      <Comment>宠物年龄</Comment>
+      <Comment>宠物年龄,以月为单位</Comment>
       <Position>6</Position>
       <StoredType>int|0s</StoredType>
     </column>
@@ -1527,7 +1527,7 @@ DYNAMIC</Options>
       <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
     </key>
     <column id="393" parent="315" name="id">
-      <AutoIncrement>4</AutoIncrement>
+      <AutoIncrement>5</AutoIncrement>
       <Comment>宠物类别主键ID</Comment>
       <NotNull>1</NotNull>
       <Position>1</Position>
@@ -1601,7 +1601,7 @@ DYNAMIC</Options>
       <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
     </key>
     <column id="407" parent="317" name="id">
-      <AutoIncrement>63</AutoIncrement>
+      <AutoIncrement>64</AutoIncrement>
       <Comment>用户编号</Comment>
       <NotNull>1</NotNull>
       <Position>1</Position>

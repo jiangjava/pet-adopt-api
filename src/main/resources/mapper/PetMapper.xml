@@ -32,13 +32,23 @@
     <!--查询数据总项-->
     <select id="getById"  resultMap="BaseResultMap">
 
-        SELECT p.id,
+        SELECT
+        p.id,
         p.name,
         p.cover,
+        p.detail,
         p.address,
-        p.id, name, cover, detail, address, age, gender, pet_type_id, is_vaccine, is_recommend, is_adopt, datetime,pt.name AS pet_type_name
+        p.age,
+        p.gender,
+        p.pet_type_id,
+        p.is_vaccine,
+        p.is_recommend,
+        p.is_adopt,
+        p.datetime,
+        pt.name AS pet_type_name
         FROM pet p
-        left join pet_type pt ON pt.id = p.pet_type_id
+        LEFT JOIN pet_type pt ON pt.id = p.pet_type_id
+        WHERE p.id = #{id}
         <where>
             <if test="name != null and name != ''">
                 AND p.name LIKE concat('%',#{name}, '%')
@@ -59,13 +69,21 @@
     <!--查询数据总项-->
     <select id="queryListItem"  resultMap="BaseResultItemMap">
 
-        SELECT p.id,
-               p.name,
-        p.cover,
-        p.address,
-        p.id, name, cover, detail, address, age, gender, pet_type_id, is_vaccine, is_recommend, is_adopt, datetime,pt.name AS pet_type_name
+        SELECT
+            p.id,
+            p.name,
+            p.cover,
+            p.detail,
+            p.address,
+            p.age,
+            p.gender,
+            p.pet_type_id,
+            p.is_vaccine,
+            p.is_recommend,
+            p.is_adopt,
+            pt.name AS pet_type_name
         FROM pet p
-        Left JOIN pet_type pt ON pt.id = p.pet_type_id
+                 LEFT JOIN pet_type pt ON pt.id = p.pet_type_id
         WHERE p.id = #{id}
     </select>
 
