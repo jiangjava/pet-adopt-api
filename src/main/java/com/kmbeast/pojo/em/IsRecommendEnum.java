@@ -10,8 +10,8 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum IsRecommendEnum {
 
-    No_ADOPT(false, "未推荐"),
-    ADOPT(true, "推荐");
+    NO_RECOMMEND(false, "未推荐"),
+    RECOMMEND(true, "推荐");
 
     private final Boolean stats; // 状态
     private final String name; // 状态描述

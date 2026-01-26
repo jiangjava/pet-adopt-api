@@ -22,4 +22,6 @@ public interface PetService {
     Result<PetVO> getById(Integer id);
 
     Result<List<PetListItemVO>> list(PetQueryDto petQueryDto);
+
+    Result<List<PetListItemVO>> recommend();
 }

@@ -1035,7 +1035,7 @@ sys|schema||mysql.sys|localhost|TRIGGER|G</Grants>
       <AutoIntrospectionLevel>3</AutoIntrospectionLevel>
       <Current>1</Current>
       <LastIntrospectionLevel>3</LastIntrospectionLevel>
-      <LastIntrospectionLocalTimestamp>2026-01-22.11:22:40</LastIntrospectionLocalTimestamp>
+      <LastIntrospectionLocalTimestamp>2026-01-23.10:23:18</LastIntrospectionLocalTimestamp>
       <CollationName>utf8mb4_0900_ai_ci</CollationName>
     </schema>
     <schema id="300" parent="1" name="school__data">
