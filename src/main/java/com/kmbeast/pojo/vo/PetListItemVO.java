@@ -51,7 +51,6 @@ public class PetListItemVO {
      * 是否已经接种疫苗(0:未接种；1：已接种）
      */
     private Boolean isVaccine;
-    /***/
     /**
      *是否推荐（0：未推荐；1：已推荐）
      */
