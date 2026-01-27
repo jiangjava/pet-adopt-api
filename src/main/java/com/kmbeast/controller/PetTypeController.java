@@ -26,7 +26,7 @@ public class PetTypeController {
 
     /**
     * 宠物类别新增
-    * @param petTypes实体数据
+    * @param petType 实体数据
     * @return Result<String>通用返回封装类
     * */
     @ResponseBody
@@ -37,7 +37,7 @@ public class PetTypeController {
 
     /**
      * 宠物类别修改
-     * @param PetType 主键ID
+     * @param petType 主键ID
      * @return Result<String>通用返回封装类
      * */
     @ResponseBody
@@ -59,7 +59,7 @@ public class PetTypeController {
 
     /**
      * 宠物类别查询
-     * @param PetTypeQueryDto实体数据
+     * @param petTypeQueryDto 实体数据
      * @return Result<List<PetType>>通用返回封装类
      * */
     @Pager
