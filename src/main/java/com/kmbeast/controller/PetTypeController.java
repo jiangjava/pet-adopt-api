@@ -4,9 +4,6 @@ import com.kmbeast.aop.Pager;
 import com.kmbeast.pojo.api.Result;
 import com.kmbeast.pojo.dto.*;
 import com.kmbeast.pojo.entity.PetType;
-import com.kmbeast.pojo.entity.User;
-import com.kmbeast.pojo.vo.UserVO;
-import com.kmbeast.service.UserService;
 import com.kmbeast.service.impl.PetTypeService;
 import org.springframework.web.bind.annotation.*;
 
