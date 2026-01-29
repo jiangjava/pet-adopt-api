@@ -2,25 +2,29 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.kmbeast.mapper.ActiveNetMapper">
 
-    <!--查询数据总项-->
-    <select id="query"  resultMap="BaseResultMap" >
+    <select id="query" resultMap="BaseResultMap">
 
-        SELECT an.id, use_id, content_id, type, create_time, create_type
-        FROM active_net an
+        SELECT id, user_id, content_id, type, create_time, content_type
+        FROM active_net
         <where>
             <if test="userId != null">
                 AND user_id = #{userId}
             </if>
+
             <if test="contentId != null">
                 AND content_id = #{contentId}
             </if>
-            <if test="contentType != null and contentType !='">
+
+            <if test="contentType != null and contentType !=''">
                 AND content_type = #{contentType}
             </if>
-            <if test="userId != null">
+
+            <if test="type != null">
                 AND type = #{type}
             </if>
+
         </where>
+
         <if test="current != null and size != null">
             LIMIT #{current},#{size}
         </if>
@@ -36,19 +40,22 @@
             <if test="userId != null">
                 AND user_id = #{userId}
             </if>
+
             <if test="contentId != null">
                 AND content_id = #{contentId}
             </if>
-            <if test="contentType != null and contentType !='">
+
+            <if test="contentType != null and contentType !=''">
                 AND content_type = #{contentType}
             </if>
-            <if test="userId != null">
+
+            <if test="type != null">
                 AND type = #{type}
             </if>
+
         </where>
 
     </select>
-
 
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.kmbeast.pojo.entity.ActiveNet">
@@ -56,8 +63,9 @@
         <result column="user_id" property="userId"/>
         <result column="content_id" property="contentId"/>
         <result column="type" property="type"/>
-        <result column="content_id" property="contentId"/>
+        <result column="content_type" property="contentType"/>
         <result column="create_time" property="createTime"/>
     </resultMap>
+
 
 </mapper>

@@ -1,6 +1,7 @@
 package com.kmbeast.controller;
 
 import com.kmbeast.aop.Pager;
+import com.kmbeast.context.LocalThreadHolder;
 import com.kmbeast.pojo.api.ApiResult;
 import com.kmbeast.pojo.api.Result;
 import com.kmbeast.pojo.dto.ActiveNetQueryDto;
@@ -43,6 +44,20 @@ public class ActiveNetController {
     public Result<String> deleteById(@PathVariable Integer id){
         activeNetService.removeById(id);
         return ApiResult.success();
+    }
+
+    /**
+     * 查询用户自己的行为互动信息
+     *
+     * @param activeNetQueryDto 查询条件类
+     * @return Result<List < ActiveNet>> 通用返回封装类
+     */
+    @Pager
+    @ResponseBody
+    @PostMapping(value = "/queryUser")
+    public Result<List<ActiveNet>> queryUser(@RequestBody ActiveNetQueryDto activeNetQueryDto) {
+        activeNetQueryDto.setUserId(LocalThreadHolder.getUserId()); // 设置用户ID，为了数据隔离
+        return activeNetService.query(activeNetQueryDto);
     }
 
     /**

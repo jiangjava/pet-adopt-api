@@ -1142,7 +1142,7 @@ DYNAMIC</Options>
       <Position>1</Position>
       <StoredType>int|0s</StoredType>
     </column>
-    <column id="319" parent="307" name="use_id">
+    <column id="319" parent="307" name="user_id">
       <Comment>用户ID，外键，关联的是用户表</Comment>
       <Position>2</Position>
       <StoredType>int|0s</StoredType>
@@ -1162,7 +1162,7 @@ DYNAMIC</Options>
       <Position>5</Position>
       <StoredType>datetime|0s</StoredType>
     </column>
-    <column id="323" parent="307" name="create_type">
+    <column id="323" parent="307" name="content_type">
       <Comment>内容模块，标识的是该互动类型属于什么模块</Comment>
       <Position>6</Position>
       <StoredType>varchar(30)|0s</StoredType>
@@ -1336,7 +1336,7 @@ DYNAMIC</Options>
       <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
     </key>
     <column id="356" parent="312" name="id">
-      <AutoIncrement>2</AutoIncrement>
+      <AutoIncrement>4</AutoIncrement>
       <Comment>宠物信息表主键ID</Comment>
       <NotNull>1</NotNull>
       <Position>1</Position>
