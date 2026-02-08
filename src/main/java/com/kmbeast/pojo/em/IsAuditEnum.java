@@ -10,7 +10,7 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum IsAuditEnum {
 
-    No_AUDIT(false, "未审核"),
+    NO_AUDIT(false, "未审核"),
     AUDIT(true, "已审核");
 
     private final Boolean stats; // 领养状态

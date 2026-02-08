@@ -4,8 +4,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
-* 宠物经验帖子查询条件类
-*/
+ *宠物经验帖子查询条件类
+ */
 @EqualsAndHashCode(callSuper = true)
 @Data
 public class PetPostQueryDto extends QueryDto{
@@ -14,15 +14,15 @@ public class PetPostQueryDto extends QueryDto{
      */
     private Integer userId;
     /**
-     * 内容ID，与内容模块配合使用
+     * 宠物类别ID，外键，关联的是宠物类别表
      */
-    private Integer contentId;
+    private Integer petTypeId;
     /**
-     * 内容模块
+     * 标题
      */
-    private String contentType;
+    private String title;
     /**
-     * 行为类型（1：浏览；2：点赞；3：收藏）
+     * 是否已经审核（0：未审核；1：已审核）
      */
-    private Integer type;
+    private Boolean isAudit;
 }
