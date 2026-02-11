@@ -1,8 +1,11 @@
 package com.kmbeast.pojo.vo;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.time.LocalDateTime;
 
 /**
  * 宠物经验帖子列表VO项
@@ -55,4 +58,9 @@ public class PetPostListItemVO {
      * 是否已经审核（0：未审核；1：已审核）
      */
     private Boolean isAudit;
+    /**
+     * 发布时间
+     */
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime createTime;
 }
