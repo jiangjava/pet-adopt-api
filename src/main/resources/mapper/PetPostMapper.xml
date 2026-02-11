@@ -12,20 +12,27 @@
                pp.pet_type_id,
                pp.summary,
                pp.is_audit,
+               pp.create_time,
                pt.name AS pet_type_name,
                u.username,
                u.avatar,
                (SELECT COUNT(*)
                 FROM active_net an
-                WHERE an.content_id = pp.id AND an.content_type = 'PET_POST' AND an.type = 2)
+                WHERE an.content_id = pp.id
+                  AND an.content_type = 'PET-POST'
+                  AND an.type = 2)
                        AS upvote_number,
                (SELECT COUNT(*)
                 FROM active_net an
-                WHERE an.content_id = pp.id AND an.content_type = 'PET_POST' AND an.type = 1)
+                WHERE an.content_id = pp.id
+                  AND an.content_type = 'PET-POST'
+                  AND an.type = 1)
                        AS view_number,
                (SELECT COUNT(*)
                 FROM active_net an
-                WHERE an.content_id = pp.id AND an.content_type = 'PET_POST' AND an.type = 3)
+                WHERE an.content_id = pp.id
+                  AND an.content_type = 'PET-POST'
+                  AND an.type = 3)
                        AS save_number
         FROM pet_post pp
                  LEFT JOIN user u ON u.id = pp.user_id
@@ -44,13 +51,13 @@
         pp.is_audit,
         u.username,
         u.avatar,
-        (SELECT COUNT(*) FROM active_net an WHERE an.content_id = pp.id AND an.content_type = 'PET_POST' AND an.type =
+        (SELECT COUNT(*) FROM active_net an WHERE an.content_id = pp.id AND an.content_type = 'PET-POST' AND an.type =
         2)
         AS upvote_number,
-        (SELECT COUNT(*) FROM active_net an WHERE an.content_id = pp.id AND an.content_type = 'PET_POST' AND an.type =
+        (SELECT COUNT(*) FROM active_net an WHERE an.content_id = pp.id AND an.content_type = 'PET-POST' AND an.type =
         1)
         AS view_number,
-        (SELECT COUNT(*) FROM active_net an WHERE an.content_id = pp.id AND an.content_type = 'PET_POST' AND an.type =
+        (SELECT COUNT(*) FROM active_net an WHERE an.content_id = pp.id AND an.content_type = 'PET-POST' AND an.type =
         3)
         AS save_number
         FROM pet_post pp
@@ -65,7 +72,7 @@
             </if>
 
             <if test="title != null and title !=''">
-                AND title = #{title}
+                AND title LIKE concat('%',#{title},'%')
             </if>
 
             <if test="isAudit != null">
@@ -95,7 +102,7 @@
             </if>
 
             <if test="title != null and title !=''">
-                AND title = #{title}
+                AND title LIKE concat('%',#{title},'%')
             </if>
 
             <if test="isAudit != null">
@@ -130,6 +137,7 @@
 
         <!-- 审核状态 -->
         <result column="is_audit" property="isAudit"/>
+        <result column="create_time" property="createTime"/>
     </resultMap>
 
     <resultMap id="PetPostListItemVOMap" type="com.kmbeast.pojo.vo.PetPostListItemVO">
@@ -153,6 +161,7 @@
 
         <!-- 审核状态 -->
         <result column="is_audit" property="isAudit"/>
+
     </resultMap>
 
 
