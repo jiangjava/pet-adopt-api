@@ -3,10 +3,7 @@ package com.kmbeast.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.kmbeast.pojo.api.Result;
 import com.kmbeast.pojo.dto.NoticeQueryDto;
-import com.kmbeast.pojo.dto.PetTypeQueryDto;
 import com.kmbeast.pojo.entity.Notice;
-import com.kmbeast.pojo.entity.PetPost;
-import com.kmbeast.pojo.entity.PetType;
 import com.kmbeast.pojo.vo.NoticeListItemVO;
 
 import java.util.List;
