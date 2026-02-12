@@ -4,7 +4,7 @@ import com.kmbeast.aop.Pager;
 import com.kmbeast.pojo.api.Result;
 import com.kmbeast.pojo.dto.*;
 import com.kmbeast.pojo.entity.PetType;
-import com.kmbeast.service.impl.PetTypeService;
+import com.kmbeast.service.PetTypeService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;

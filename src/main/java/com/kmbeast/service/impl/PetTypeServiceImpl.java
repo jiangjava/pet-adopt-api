@@ -5,6 +5,7 @@ import com.kmbeast.pojo.api.ApiResult;
 import com.kmbeast.pojo.api.Result;
 import com.kmbeast.pojo.dto.PetTypeQueryDto;
 import com.kmbeast.pojo.entity.PetType;
+import com.kmbeast.service.PetTypeService;
 import com.kmbeast.utils.AssertUtils;
 import org.springframework.stereotype.Service;
 
