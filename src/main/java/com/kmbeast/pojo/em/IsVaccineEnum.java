@@ -10,7 +10,7 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum IsVaccineEnum {
 
-    No_ADOPT(false, "未接种"),
+    NO_ADOPT(false, "未接种"),
     ADOPT(true, "已接种");
 
     private final Boolean stats; // 状态

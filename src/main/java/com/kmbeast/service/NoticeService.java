@@ -10,7 +10,7 @@ import java.util.List;
 
 /**
  * 公告业务逻辑接口
- * */
+ */
 public interface NoticeService  extends IService<Notice>{
     Result<String> saveEntity(Notice notice);
 

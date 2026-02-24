@@ -8,13 +8,13 @@ import org.apache.ibatis.annotations.Mapper;
 import java.util.List;
 
 /**
- * 宠物经验帖子持久化接口
+ * 公告持久化接口
  */
 @Mapper
 public interface NoticeMapper extends BaseMapper<Notice> {
 
     /**
-     * 查询宠物经验帖子信息
+     * 查询公告信息
      *
      * @param noticeQueryDto 查询条件类
      * @return List<NoticeListItemVO>
