@@ -1,11 +1,14 @@
 package com.kmbeast.pojo.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 /*
 * 收获地址信息表，与数据库address对应
@@ -13,9 +16,12 @@ import java.util.Date;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Address {/*
+@TableName(value = "address")
+public class Address {
+    /*
     收获地址信息表主键ID
-*/
+    */
+    @TableId(type = IdType.AUTO)
     private Integer id;
     /*
     * 用户ID，外键，关联的是用户表
@@ -41,6 +47,6 @@ public class Address {/*
     * 创建时间
     * */
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date createTime;
+    private LocalDateTime createTime;
 
 }
