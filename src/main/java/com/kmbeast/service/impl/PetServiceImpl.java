@@ -1,11 +1,16 @@
 package com.kmbeast.service.impl;
 
+import com.kmbeast.context.LocalThreadHolder;
+import com.kmbeast.mapper.ActiveNetMapper;
 import com.kmbeast.mapper.PetMapper;
 import com.kmbeast.pojo.api.ApiResult;
 import com.kmbeast.pojo.api.Result;
+import com.kmbeast.pojo.dto.ActiveNetQueryDto;
 import com.kmbeast.pojo.dto.PetQueryDto;
+import com.kmbeast.pojo.em.ActiveNetType;
 import com.kmbeast.pojo.em.IsAdoptEnum;
 import com.kmbeast.pojo.em.IsRecommendEnum;
+import com.kmbeast.pojo.entity.ActiveNet;
 import com.kmbeast.pojo.entity.Pet;
 import com.kmbeast.pojo.vo.PetListItemVO;
 import com.kmbeast.pojo.vo.PetVO;
@@ -25,6 +30,8 @@ public class PetServiceImpl implements PetService {
 
     @Resource
     private PetMapper petMapper;
+    @Resource
+    private ActiveNetMapper activeNetMapper;
 
     /**
      * 宠物信息新增
@@ -90,6 +97,21 @@ public class PetServiceImpl implements PetService {
     @Override
     public Result<PetVO> getById(Integer id) {
         PetVO petVO = petMapper.getById(id);
+        //浏览逻辑实现
+        ActiveNetQueryDto activeNetQueryDto = new ActiveNetQueryDto();
+        activeNetQueryDto.setId(LocalThreadHolder.getUserId());//设置上用户ID
+        activeNetQueryDto.setContentId(id); //设置内容ID
+        activeNetQueryDto.setContentType("PET"); //标识查的是宠物类型模块
+        activeNetQueryDto.setType(ActiveNetType.VIEW.getStatus()); // 声明为浏览类型
+        Integer count = activeNetMapper.queryCount(activeNetQueryDto);
+        if (count == 0) { //证明用户没有针对宠物模块下面的宠物信息浏览过
+            ActiveNet activeNet = new ActiveNet();
+            activeNet.setUserId(LocalThreadHolder.getUserId());
+            activeNet.setUserId(id);
+            activeNet.setContentType("PET");
+            activeNet.setCreateTime(LocalDateTime.now());
+            activeNetMapper.insert(activeNet); //浏览记录新增
+        }
         return ApiResult.success(petVO);
     }
 

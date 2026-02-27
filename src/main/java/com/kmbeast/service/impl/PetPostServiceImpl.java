@@ -2,11 +2,15 @@ package com.kmbeast.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.kmbeast.context.LocalThreadHolder;
+import com.kmbeast.mapper.ActiveNetMapper;
 import com.kmbeast.mapper.PetPostMapper;
 import com.kmbeast.pojo.api.ApiResult;
 import com.kmbeast.pojo.api.Result;
+import com.kmbeast.pojo.dto.ActiveNetQueryDto;
 import com.kmbeast.pojo.dto.PetPostQueryDto;
+import com.kmbeast.pojo.em.ActiveNetType;
 import com.kmbeast.pojo.em.IsAuditEnum;
+import com.kmbeast.pojo.entity.ActiveNet;
 import com.kmbeast.pojo.entity.PetPost;
 import com.kmbeast.pojo.vo.PetPostListItemVO;
 import com.kmbeast.pojo.vo.PetPostVO;
@@ -14,6 +18,7 @@ import com.kmbeast.service.PetPostService;
 import com.kmbeast.utils.AssertUtils;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -22,6 +27,9 @@ import java.util.List;
  */
 @Service
 public class PetPostServiceImpl extends ServiceImpl<PetPostMapper, PetPost> implements PetPostService {
+
+    @Resource
+    private ActiveNetMapper activeNetMapper;
 
     /**
      * 经验帖子列表查询
@@ -45,6 +53,21 @@ public class PetPostServiceImpl extends ServiceImpl<PetPostMapper, PetPost> impl
     @Override
     public Result<PetPostVO> getById(Integer id) {
         PetPostVO petPostVO = this.baseMapper.getById(id);
+        //浏览逻辑实现
+        ActiveNetQueryDto activeNetQueryDto = new ActiveNetQueryDto();
+        activeNetQueryDto.setId(LocalThreadHolder.getUserId());//设置上用户ID
+        activeNetQueryDto.setContentId(id); //设置内容ID
+        activeNetQueryDto.setContentType("PET-POST"); //标识查的是宠物类型模块
+        activeNetQueryDto.setType(ActiveNetType.VIEW.getStatus()); // 声明为浏览类型
+        Integer count = activeNetMapper.queryCount(activeNetQueryDto);
+        if (count == 0) { //证明用户没有针对宠物模块下面的宠物信息浏览过
+            ActiveNet activeNet = new ActiveNet();
+            activeNet.setUserId(LocalThreadHolder.getUserId());
+            activeNet.setUserId(id);
+            activeNet.setContentType("PET-POST");
+            activeNet.setCreateTime(LocalDateTime.now());
+            activeNetMapper.insert(activeNet); //浏览记录新增
+        }
         return ApiResult.success(petPostVO);
     }
 
