@@ -84,7 +84,7 @@ public class PetController {
     }
 
     /**
-     * 宠物查询手动推荐宠物信息
+     * 查询手动推荐宠物信息
      *
      * @return Result<List < PetListItemVO>> 通用返回封装类
      */
@@ -92,6 +92,17 @@ public class PetController {
     @GetMapping(value = "/recommend")
     public Result<List<PetListItemVO>> recommend() {
         return petService.recommend();
+    }
+
+    /**
+     * 智能推荐宠物信息
+     * @param count 期望拿到的条数
+     * @return Result<List < PetListItemVO>> 通用返回封装类
+     */
+    @ResponseBody
+    @GetMapping(value = "/autoRecommend/{count}")
+    public Result<List<PetListItemVO>> autoRecommend(@PathVariable Integer count) {
+        return petService.autoRecommend(count);
     }
 
 }

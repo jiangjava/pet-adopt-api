@@ -57,6 +57,34 @@
 
     </select>
 
+    <select id="queryScore" resultType="com.kmbeast.pojo.vo.ScoreVO">
+        SELECT user_id    AS 'userId',
+               content_id AS 'contentId',
+               SUM(
+                       CASE
+                           WHEN type = 1 THEN 1 -- 浏览(VIEW)得1分
+                           WHEN type = 2 THEN 1 -- 点赞(UPVOTE)得1分
+                           WHEN type = 3 THEN 3 -- 收藏(SAVE)得3分
+                           ELSE 0
+                           END
+               )          AS 'score'
+        FROM active_net
+        WHERE content_type = #{contentType}
+        GROUP BY user_id, content_id
+        ORDER BY user_id, content_id;
+    </select>
+
+    <select id="queryAllIds" resultType="com.kmbeast.pojo.vo.ScoreVO">
+        SELECT an.content_id,
+               COUNT(an.id) AS score
+        FROM active_net an
+        WHERE an.content_type = #{contentType}
+          AND an.type = #{type}
+        GROUP BY content_id
+        ORDER BY score desc
+        LIMIT 0, #{count}
+    </select>
+
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.kmbeast.pojo.entity.ActiveNet">
         <id column="id" property="id"/>

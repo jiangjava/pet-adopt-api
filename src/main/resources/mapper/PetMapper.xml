@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--B站「程序员辰星」原创出品-->
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.kmbeast.mapper.PetMapper">
 
     <insert id="save">
-        INSERT INTO pet (id, name, cover, detail, address, age, gender,pet_type_id, is_vaccine, is_recommend, is_adopt,
+        INSERT INTO pet (id, name, cover, detail, address, age, gender, pet_type_id, is_vaccine, is_recommend, is_adopt,
                          create_time)
-        VALUES (#{id}, #{name}, #{cover}, #{detail}, #{address}, #{age}, #{gender},#{petTypeId}, #{isVaccine}, #{isRecommend},
+        VALUES (#{id}, #{name}, #{cover}, #{detail}, #{address}, #{age}, #{gender}, #{petTypeId}, #{isVaccine},
+                #{isRecommend},
                 #{isAdopt}, #{createTime})
     </insert>
 
@@ -62,6 +64,29 @@
         FROM pet p
                  LEFT JOIN pet_type pt ON pt.id = p.pet_type_id
         WHERE p.id = #{id}
+    </select>
+
+    <select id="queryListItemByIds" resultMap="BaseResultItemMap">
+
+        SELECT p.id,
+        p.name,
+        p.cover,
+        p.address,
+        p.age,
+        p.gender,
+        p.pet_type_id,
+        p.is_vaccine,
+        p.is_recommend,
+        p.is_adopt,
+        p.create_time,
+        pt.name AS pet_type_name
+        FROM pet p
+        LEFT JOIN pet_type pt ON pt.id = p.pet_type_id
+        WHERE p.id IN
+        <foreach collection="ids" item="id" separator="," index="index" open="(" close=")">
+            #{id}
+        </foreach>
+
     </select>
 
     <!--查询数据总项-->
@@ -128,6 +153,12 @@
         SELECT pt.id, pt.name
         FROM pet pt
         WHERE pt.name = #{name}
+    </select>
+
+
+    <select id="queryAllIds" resultType="java.lang.Integer">
+        SELECT p.id
+        FROM pet p
     </select>
 
     <!-- 通用查询映射结果 -->

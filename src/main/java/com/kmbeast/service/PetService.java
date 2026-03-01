@@ -9,8 +9,8 @@ import com.kmbeast.pojo.vo.PetVO;
 import java.util.List;
 
 /**
-* 宠物业务逻辑接口
-* */
+ * 宠物业务逻辑接口
+ */
 public interface PetService {
 
     Result<String> save(Pet pet);
@@ -24,4 +24,8 @@ public interface PetService {
     Result<List<PetListItemVO>> list(PetQueryDto petQueryDto);
 
     Result<List<PetListItemVO>> recommend();
+
+    Result<List<PetListItemVO>> autoRecommend(Integer count);
+
+
 }

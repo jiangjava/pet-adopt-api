@@ -13,7 +13,7 @@ public enum IsRecommendEnum {
     NO_RECOMMEND(false, "未推荐"),
     RECOMMEND(true, "推荐");
 
-    private final Boolean stats; // 状态
+    private final Boolean status; // 状态
     private final String name; // 状态描述
 
 
