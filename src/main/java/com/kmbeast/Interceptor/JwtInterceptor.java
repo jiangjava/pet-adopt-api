@@ -28,7 +28,7 @@ public class JwtInterceptor implements HandlerInterceptor {
 
         // 获取请求URI
         String requestURI = request.getRequestURI();
-
+        System.out.println(requestURI);
         // 定义不需要拦截的路径
         String[] excludePaths = {
                 "/login",
@@ -36,7 +36,8 @@ public class JwtInterceptor implements HandlerInterceptor {
                 "/file",
                 "/recommend", // 推荐接口
                 "/pet-type/query", // 宠物类别查询接口不做拦截
-                "/pet/list" // 宠物宠物信息列表查询接口不做拦截
+                "/pet/list" ,// 宠物信息列表查询接口不做拦截
+                "/pet/viewById", // 游客通过ID查询宠物信息
         };
 
         // 检查是否在排除路径中

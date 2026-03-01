@@ -113,4 +113,17 @@ public class PetPostController {
         return petPostService.list(petPostQueryDto);
     }
 
+    /**
+     * 智能推荐宠物经验帖子信息
+     *
+     * @param count 期望拿到的条数
+     * @return Result<List < PetPostListItemVO>> 通用返回封装类
+     * @author B站「程序员辰星」原创出品
+     */
+    @ResponseBody
+    @GetMapping(value = "/autoRecommend/{count}")
+    public Result<List<PetPostListItemVO>> autoRecommend(@PathVariable Integer count) {
+        return petPostService.autoRecommend(count);
+    }
+
 }

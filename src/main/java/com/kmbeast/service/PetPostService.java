@@ -10,8 +10,8 @@ import com.kmbeast.pojo.vo.PetPostVO;
 import java.util.List;
 
 /**
-* 宠物经验帖子业务逻辑接口
-*/
+ * 宠物经验帖子业务逻辑接口
+ */
 public interface PetPostService extends IService<PetPost> {
 
     Result<List<PetPostListItemVO>> list(PetPostQueryDto petPostQueryDto);
@@ -23,4 +23,8 @@ public interface PetPostService extends IService<PetPost> {
     Result<String> updateEntity(PetPost petPost);
 
     Result<String> audit(Integer id);
+
+    Result<List<PetPostListItemVO>> autoRecommend(Integer count);
+
+
 }

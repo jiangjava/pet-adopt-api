@@ -29,6 +29,8 @@ import java.util.stream.Collectors;
 
 /**
  * 宠物信息业务逻辑实现类
+ *
+ * @author B站「程序员辰星」原创出品
  */
 @Service
 public class PetServiceImpl implements PetService {
@@ -123,6 +125,17 @@ public class PetServiceImpl implements PetService {
     }
 
     /**
+     * 游客通过宠物ID查询宠物信息
+     *
+     * @param id 主键ID
+     * @return Result<String> 后台通用返回封装类
+     */
+    @Override
+    public Result<PetVO> viewById(Integer id) {
+        return ApiResult.success(petMapper.getById(id));
+    }
+
+    /**
      * 查询宠物列表
      *
      * @param petQueryDto 查询条件类
@@ -161,6 +174,7 @@ public class PetServiceImpl implements PetService {
      *
      * @param count 期望拿到的条数
      * @return Result<List < PetListItemVO>> 通用返回封装类
+     * @author B站「程序员辰星」原创出品
      */
     @Override
     public Result<List<PetListItemVO>> autoRecommend(Integer count) {

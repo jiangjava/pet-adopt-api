@@ -39,4 +39,17 @@ public interface PetPostMapper extends BaseMapper<PetPost> {
      */
     PetPostVO getById(@Param(value = "id") Integer id);
 
+    /**
+     * 查询全部的宠物经验帖子ID列表
+     * @return List<Integer>
+     */
+    List<Integer> queryAllIds();
+
+    /**
+     * 通过宠物经验帖子的ID集合查询帖子数据
+     * @param ids ID列表
+     * @return List<PetPostListItemVO>
+     */
+    List<PetPostListItemVO> queryListItemByIds(@Param(value = "ids") List<Integer> ids);
+
 }

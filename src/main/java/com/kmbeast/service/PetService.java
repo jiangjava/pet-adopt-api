@@ -27,5 +27,6 @@ public interface PetService {
 
     Result<List<PetListItemVO>> autoRecommend(Integer count);
 
+    Result<PetVO> viewById(Integer id);
 
 }

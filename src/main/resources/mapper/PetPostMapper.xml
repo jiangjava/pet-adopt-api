@@ -114,6 +114,39 @@
 
     </select>
 
+    <select id="queryAllIds" resultType="java.lang.Integer">
+        SELECT id
+        FROM pet_post
+    </select>
+
+    <select id="queryListItemByIds" resultMap="PetPostListItemVOMap">
+        SELECT pp.id,
+        pp.user_id,
+        pp.title,
+        pp.cover,
+        pp.summary,
+        pp.is_audit,
+        pp.create_time,
+        u.username,
+        u.avatar,
+        (SELECT COUNT(*) FROM active_net an WHERE an.content_id = pp.id AND an.content_type = 'PET-POST' AND an.type =
+        2)
+        AS upvote_number,
+        (SELECT COUNT(*) FROM active_net an WHERE an.content_id = pp.id AND an.content_type = 'PET-POST' AND an.type =
+        1)
+        AS view_number,
+        (SELECT COUNT(*) FROM active_net an WHERE an.content_id = pp.id AND an.content_type = 'PET-POST' AND an.type =
+        3)
+        AS save_number
+        FROM pet_post pp
+        LEFT JOIN user u ON u.id = pp.user_id
+        WHERE pp.id IN
+        <foreach collection="ids" item="id" index="index" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+
+    </select>
+
     <resultMap id="PetPostVOMap" type="com.kmbeast.pojo.vo.PetPostVO">
         <!-- 基础字段 -->
         <id column="id" property="id"/>

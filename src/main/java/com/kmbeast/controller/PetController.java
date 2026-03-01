@@ -71,6 +71,18 @@ public class PetController {
     }
 
     /**
+     * 通过宠物ID查询宠物详情信息
+     *
+     * @param id 宠物ID
+     * @return Result<List < PetVO>> 通用返回封装类
+     */
+    @ResponseBody
+    @GetMapping(value = "/viewById/{id}")
+    public Result<PetVO> viewById(@PathVariable Integer id) {
+        return petService.viewById(id);
+    }
+
+    /**
      * 宠物查询信息列表
      *
      * @param petQueryDto 实体数据
