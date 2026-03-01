@@ -29,4 +29,6 @@ public interface PetService {
 
     Result<PetVO> viewById(Integer id);
 
+    Result<List<PetListItemVO>> saveList();
+
 }

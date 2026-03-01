@@ -211,4 +211,27 @@ public class PetServiceImpl implements PetService {
         List<PetListItemVO> petListItemVOS = petMapper.queryListItemByIds(recommendItems);
         return ApiResult.success(petListItemVOS);
     }
+
+    /**
+     * 查询用户收藏的宠物信息
+     *
+     * @return Result<List < PetListItemVO>> 通用返回封装类
+     */
+    @Override
+    public Result<List<PetListItemVO>> saveList() {
+        // 先去查收藏了哪些？
+        ActiveNetQueryDto activeNetQueryDto = new ActiveNetQueryDto();
+        activeNetQueryDto.setUserId(LocalThreadHolder.getUserId()); // 设置用户的ID
+        activeNetQueryDto.setContentType("PET"); // 设置查询的模块 - PET - 宠物模块
+        activeNetQueryDto.setType(ActiveNetType.SAVE.getStatus()); // 查询宠物模块下面的是收藏的类型
+        List<ActiveNet> activeNetList = activeNetMapper.query(activeNetQueryDto);
+        if (activeNetList.isEmpty()) {
+            return ApiResult.success(new ArrayList<>());
+        }
+        List<Integer> petIds = activeNetList.stream()
+                .map(ActiveNet::getContentId)
+                .collect(Collectors.toList());
+        List<PetListItemVO> petListItemVOS = petMapper.queryListItemByIds(petIds);
+        return ApiResult.success(petListItemVOS);
+    }
 }

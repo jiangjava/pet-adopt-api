@@ -13,9 +13,8 @@ import javax.annotation.Resource;
 import java.util.List;
 
 /**
-* 行为互动控制器
-* */
-
+ * 行为互动控制器
+ */
 @RestController
 @RequestMapping("/active-net")
 public class ActiveNetController {
@@ -24,24 +23,48 @@ public class ActiveNetController {
     private ActiveNetService activeNetService;
 
     /**
-    * 行为互动新增
-    * @param activeNet 实体数据
-    * @return Result<String>通用返回封装类
-    * */
+     * 行为互动新增
+     *
+     * @param activeNet 实体数据
+     * @return Result<String> 通用返回封装类
+     */
     @ResponseBody
     @PostMapping(value = "/save")
-    public Result<String> save(@RequestBody ActiveNet activeNet){
+    public Result<String> save(@RequestBody ActiveNet activeNet) {
         return activeNetService.saveEntity(activeNet);
     }
 
     /**
+     * 删除用户收藏的宠物信息
+     *
+     * @return Result<String> 通用返回封装类
+     */
+    @ResponseBody
+    @DeleteMapping(value = "/deleteUserPetList")
+    public Result<String> deleteUserPetList() {
+        return activeNetService.deleteUserPetList();
+    }
+
+    /**
+     * 删除用户收藏的宠物经验帖子信息
+     *
+     * @return Result<String> 通用返回封装类
+     */
+    @ResponseBody
+    @DeleteMapping(value = "/deleteUserPetPostList")
+    public Result<String> deleteUserPetPostList() {
+        return activeNetService.deleteUserPetPostList();
+    }
+
+    /**
      * 行为互动删除
+     *
      * @param id 主键ID
-     * @return Result<String>通用返回封装类
-     * */
+     * @return Result<String> 通用返回封装类
+     */
     @ResponseBody
     @DeleteMapping(value = "/{id}")
-    public Result<String> deleteById(@PathVariable Integer id){
+    public Result<String> deleteById(@PathVariable Integer id) {
         activeNetService.removeById(id);
         return ApiResult.success();
     }
@@ -62,16 +85,15 @@ public class ActiveNetController {
 
     /**
      * 行为互动查询
+     *
      * @param activeNetQueryDto 查询条件类
-     * @return Result<List<PetType>>通用返回封装类
-     * */
+     * @return Result<List < ActiveNet>> 通用返回封装类
+     */
     @Pager
     @ResponseBody
     @PostMapping(value = "/query")
-    public Result<List<ActiveNet>> query(@RequestBody ActiveNetQueryDto activeNetQueryDto){
+    public Result<List<ActiveNet>> query(@RequestBody ActiveNetQueryDto activeNetQueryDto) {
         return activeNetService.query(activeNetQueryDto);
     }
 
-
 }
-

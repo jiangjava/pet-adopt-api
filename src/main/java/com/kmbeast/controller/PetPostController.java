@@ -6,6 +6,7 @@ import com.kmbeast.pojo.api.ApiResult;
 import com.kmbeast.pojo.api.Result;
 import com.kmbeast.pojo.dto.PetPostQueryDto;
 import com.kmbeast.pojo.entity.PetPost;
+import com.kmbeast.pojo.vo.PetListItemVO;
 import com.kmbeast.pojo.vo.PetPostListItemVO;
 import com.kmbeast.pojo.vo.PetPostVO;
 import com.kmbeast.service.PetPostService;
@@ -124,6 +125,17 @@ public class PetPostController {
     @GetMapping(value = "/autoRecommend/{count}")
     public Result<List<PetPostListItemVO>> autoRecommend(@PathVariable Integer count) {
         return petPostService.autoRecommend(count);
+    }
+
+    /**
+     * 查询用户收藏的宠物经验帖子信息
+     *
+     * @return Result<List < PetListItemVO>> 通用返回封装类
+     */
+    @ResponseBody
+    @GetMapping(value = "/saveList")
+    public Result<List<PetPostListItemVO>> saveList() {
+        return petPostService.saveList();
     }
 
 }

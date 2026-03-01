@@ -107,6 +107,18 @@ public class PetController {
     }
 
     /**
+     * 查询用户收藏的宠物信息
+     *
+     * @return Result<List < PetListItemVO>> 通用返回封装类
+     */
+    @ResponseBody
+    @GetMapping(value = "/saveList")
+    public Result<List<PetListItemVO>> saveList() {
+        return petService.saveList();
+    }
+
+
+    /**
      * 智能推荐宠物信息
      * @param count 期望拿到的条数
      * @return Result<List < PetListItemVO>> 通用返回封装类

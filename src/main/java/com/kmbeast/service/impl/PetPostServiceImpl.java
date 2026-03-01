@@ -18,6 +18,7 @@ import com.kmbeast.pojo.vo.ScoreVO;
 import com.kmbeast.service.PetPostService;
 import com.kmbeast.utils.AssertUtils;
 import com.kmbeast.utils.UserBasedCFUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -35,6 +36,8 @@ public class PetPostServiceImpl extends ServiceImpl<PetPostMapper, PetPost> impl
 
     @Resource
     private ActiveNetMapper activeNetMapper;
+    @Autowired
+    private PetPostMapper petPostMapper;
 
     /**
      * 经验帖子列表查询
@@ -132,6 +135,7 @@ public class PetPostServiceImpl extends ServiceImpl<PetPostMapper, PetPost> impl
 
     /**
      * 智能推荐宠物经验帖子信息
+     *
      * @param count 期望拿到的条数
      * @return Result<List < PetPostListItemVO>> 通用返回封装类
      */
@@ -169,5 +173,28 @@ public class PetPostServiceImpl extends ServiceImpl<PetPostMapper, PetPost> impl
         }
         List<PetPostListItemVO> petListItemVOS = this.baseMapper.queryListItemByIds(recommendItems);
         return ApiResult.success(petListItemVOS);
+    }
+
+    /**
+     * 查询用户收藏的宠物经验帖子信息
+     *
+     * @return Result<List < PetListItemVO>> 通用返回封装类
+     */
+    @Override
+    public Result<List<PetPostListItemVO>> saveList() {
+        // 先去查收藏了哪些？
+        ActiveNetQueryDto activeNetQueryDto = new ActiveNetQueryDto();
+        activeNetQueryDto.setUserId(LocalThreadHolder.getUserId()); // 设置用户的ID
+        activeNetQueryDto.setContentType("PET-POST"); // 设置查询的模块 - PET - 宠物模块
+        activeNetQueryDto.setType(ActiveNetType.SAVE.getStatus()); // 查询宠物模块下面的是收藏的类型
+        List<ActiveNet> activeNetList = activeNetMapper.query(activeNetQueryDto);
+        if (activeNetList.isEmpty()) {
+            return ApiResult.success(new ArrayList<>());
+        }
+        List<Integer> petIds = activeNetList.stream()
+                .map(ActiveNet::getContentId)
+                .collect(Collectors.toList());
+        List<PetPostListItemVO> petPostListItemVOS = petPostMapper.queryListItemByIds(petIds);
+        return ApiResult.success(petPostListItemVOS);
     }
 }

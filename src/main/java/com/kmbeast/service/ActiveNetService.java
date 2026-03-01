@@ -7,12 +7,17 @@ import com.kmbeast.pojo.entity.ActiveNet;
 
 import java.util.List;
 
-/*
-* 行为互动业务逻辑接口
-* */
+/**
+ * 行为互动业务逻辑接口
+ */
 public interface ActiveNetService extends IService<ActiveNet> {
 
     Result<List<ActiveNet>> query(ActiveNetQueryDto activeNetQueryDto);
 
     Result<String> saveEntity(ActiveNet activeNet);
+
+    Result<String> deleteUserPetList();
+
+    Result<String> deleteUserPetPostList();
+
 }
