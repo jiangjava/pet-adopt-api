@@ -7,15 +7,15 @@
 
         SELECT
         pao.id,
-        user_id,
-        pet_id,
-        address_id,
-        detail,
-        status,
-        audit_error_detail,
-        is_again_post,
-        post_number,
-        create_time
+        pao.user_id,
+        pao.pet_id,
+        pao.address_id,
+        pao.detail,
+        pao.status,
+        pao.audit_error_detail,
+        pao.is_again_post,
+        pao.post_number,
+        pao.create_time,
         u.username,
         u.avatar,
         p.name AS pet_name,
@@ -30,6 +30,10 @@
         <where>
             <if test="userId != null">
                 AND pao.user_id = #{userId}
+            </if>
+
+            <if test="petId != null">
+                AND pao.pet_id = #{petId}
             </if>
 
             <if test="status != null">
@@ -54,6 +58,10 @@
                 AND pao.user_id = #{userId}
             </if>
 
+            <if test="petId != null">
+                AND pao.pet_id = #{petId}
+            </if>
+
             <if test="status != null">
                 AND pao.status = #{status}
             </if>
@@ -67,13 +75,13 @@
         <!--订单基本信息-->
         <id column="id" property="id"/>
         <result column="user_id" property="userId"/>
-        <result column="detail" property="petId"/>
-        <result column="addressee" property="addressId"/>
-        <result column="concat_phone" property="detail"/>
-        <result column="is_default" property="status"/>
-        <result column="is_default" property="auditErrorDetail"/>
-        <result column="is_default" property="isAgainPost"/>
-        <result column="is_default" property="postNumber"/>
+        <result column="detail" property="detail"/>
+        <result column="addressee" property="addressee"/>
+        <result column="concat_phone" property="concatPhone"/>
+        <result column="status" property="status"/>
+        <result column="audit_error_detail" property="auditErrorDetail"/>
+        <result column="is_again_post" property="isAgainPost"/>
+        <result column="post_number" property="postNumber"/>
         <result column="create_time" property="createTime"/>
 
         <!--用戶基本信息-->
