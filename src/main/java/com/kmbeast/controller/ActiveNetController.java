@@ -6,6 +6,7 @@ import com.kmbeast.pojo.api.ApiResult;
 import com.kmbeast.pojo.api.Result;
 import com.kmbeast.pojo.dto.ActiveNetQueryDto;
 import com.kmbeast.pojo.entity.ActiveNet;
+import com.kmbeast.pojo.vo.ChartVO;
 import com.kmbeast.service.ActiveNetService;
 import org.springframework.web.bind.annotation.*;
 
@@ -94,6 +95,18 @@ public class ActiveNetController {
     @PostMapping(value = "/query")
     public Result<List<ActiveNet>> query(@RequestBody ActiveNetQueryDto activeNetQueryDto) {
         return activeNetService.query(activeNetQueryDto);
+    }
+
+    /**
+     * 查询帖子流量指标数据
+     *
+     * @param activeNetQueryDto 查询条件类
+     * @return Result<List < ActiveNet>> 通用返回封装类
+     */
+    @ResponseBody
+    @PostMapping(value = "/listChart")
+    public Result<List<ChartVO>> listChart(@RequestBody ActiveNetQueryDto activeNetQueryDto) {
+        return activeNetService.listChart(activeNetQueryDto);
     }
 
 }

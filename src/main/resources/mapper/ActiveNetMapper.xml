@@ -2,6 +2,40 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.kmbeast.mapper.ActiveNetMapper">
 
+    <select id="listChart" resultMap="BaseResultMap">
+
+        SELECT id, create_time
+        FROM active_net
+        <where>
+            <if test="userId != null">
+                AND user_id = #{userId}
+            </if>
+
+            <if test="contentId != null">
+                AND content_id = #{contentId}
+            </if>
+
+            <if test="contentType != null and contentType !=''">
+                AND content_type = #{contentType}
+            </if>
+
+            <if test="type != null">
+                AND type = #{type}
+            </if>
+
+            <if test="startTime != null and endTime != null">
+                AND create_time BETWEEN #{startTime} AND #{endTime}
+            </if>
+
+        </where>
+
+        <if test="current != null and size != null">
+            LIMIT #{current},#{size}
+        </if>
+
+    </select>
+
+
     <select id="query" resultMap="BaseResultMap">
 
         SELECT id, user_id, content_id, type, create_time, content_type
@@ -21,6 +55,10 @@
 
             <if test="type != null">
                 AND type = #{type}
+            </if>
+
+            <if test="startTime != null and endTime != null">
+                AND create_time BETWEEN #{startTime} AND #{endTime}
             </if>
 
         </where>
@@ -51,6 +89,10 @@
 
             <if test="type != null">
                 AND type = #{type}
+            </if>
+
+            <if test="startTime != null and endTime != null">
+                AND create_time BETWEEN #{startTime} AND #{endTime}
             </if>
 
         </where>

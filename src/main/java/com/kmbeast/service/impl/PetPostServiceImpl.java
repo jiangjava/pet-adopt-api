@@ -13,6 +13,7 @@ import com.kmbeast.pojo.em.IsAuditEnum;
 import com.kmbeast.pojo.entity.ActiveNet;
 import com.kmbeast.pojo.entity.PetPost;
 import com.kmbeast.pojo.vo.PetPostListItemVO;
+import com.kmbeast.pojo.vo.PetPostSelectedVO;
 import com.kmbeast.pojo.vo.PetPostVO;
 import com.kmbeast.pojo.vo.ScoreVO;
 import com.kmbeast.service.PetPostService;
@@ -196,5 +197,16 @@ public class PetPostServiceImpl extends ServiceImpl<PetPostMapper, PetPost> impl
                 .collect(Collectors.toList());
         List<PetPostListItemVO> petPostListItemVOS = petPostMapper.queryListItemByIds(petIds);
         return ApiResult.success(petPostListItemVOS);
+    }
+
+    /**
+     * 查询用户名下帖子数据下拉选择器
+     *
+     * @return Result<List < PetPostSelectedVO>> 通用返回封装类
+     */
+    @Override
+    public Result<List<PetPostSelectedVO>> listPetPostSelect() {
+        List<PetPostSelectedVO> petPostSelectedVOS = this.baseMapper.querySelectedVO(LocalThreadHolder.getUserId());
+        return ApiResult.success(petPostSelectedVOS);
     }
 }

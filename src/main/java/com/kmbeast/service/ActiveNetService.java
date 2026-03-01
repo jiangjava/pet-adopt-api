@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.kmbeast.pojo.api.Result;
 import com.kmbeast.pojo.dto.ActiveNetQueryDto;
 import com.kmbeast.pojo.entity.ActiveNet;
+import com.kmbeast.pojo.vo.ChartVO;
 
 import java.util.List;
 
@@ -19,5 +20,7 @@ public interface ActiveNetService extends IService<ActiveNet> {
     Result<String> deleteUserPetList();
 
     Result<String> deleteUserPetPostList();
+
+    Result<List<ChartVO>> listChart(ActiveNetQueryDto activeNetQueryDto);
 
 }

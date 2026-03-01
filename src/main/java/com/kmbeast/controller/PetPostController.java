@@ -6,9 +6,7 @@ import com.kmbeast.pojo.api.ApiResult;
 import com.kmbeast.pojo.api.Result;
 import com.kmbeast.pojo.dto.PetPostQueryDto;
 import com.kmbeast.pojo.entity.PetPost;
-import com.kmbeast.pojo.vo.PetListItemVO;
-import com.kmbeast.pojo.vo.PetPostListItemVO;
-import com.kmbeast.pojo.vo.PetPostVO;
+import com.kmbeast.pojo.vo.*;
 import com.kmbeast.service.PetPostService;
 import org.springframework.web.bind.annotation.*;
 
@@ -136,6 +134,17 @@ public class PetPostController {
     @GetMapping(value = "/saveList")
     public Result<List<PetPostListItemVO>> saveList() {
         return petPostService.saveList();
+    }
+
+    /**
+     * 查询用户名下帖子数据下拉选择器
+     *
+     * @return Result<List < PetPostSelectedVO>> 通用返回封装类
+     */
+    @ResponseBody
+    @GetMapping(value = "/listPetPostSelect")
+    public Result<List<PetPostSelectedVO>> listPetPostSelect() {
+        return petPostService.listPetPostSelect();
     }
 
 }

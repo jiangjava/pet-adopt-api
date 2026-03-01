@@ -2,11 +2,10 @@ package com.kmbeast.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.kmbeast.pojo.api.Result;
-import com.kmbeast.pojo.dto.ActiveNetQueryDto;
 import com.kmbeast.pojo.dto.PetPostQueryDto;
-import com.kmbeast.pojo.entity.ActiveNet;
 import com.kmbeast.pojo.entity.PetPost;
 import com.kmbeast.pojo.vo.PetPostListItemVO;
+import com.kmbeast.pojo.vo.PetPostSelectedVO;
 import com.kmbeast.pojo.vo.PetPostVO;
 
 import java.util.List;
@@ -29,5 +28,7 @@ public interface PetPostService extends IService<PetPost> {
     Result<List<PetPostListItemVO>> autoRecommend(Integer count);
 
     Result<List<PetPostListItemVO>> saveList();
+
+    Result<List<PetPostSelectedVO>> listPetPostSelect();
 
 }

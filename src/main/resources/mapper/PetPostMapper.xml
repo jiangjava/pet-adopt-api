@@ -147,6 +147,12 @@
 
     </select>
 
+    <select id="querySelectedVO" resultType="com.kmbeast.pojo.vo.PetPostSelectedVO">
+        SELECT pp.id, pp.title
+        FROM pet_post pp
+        WHERE pp.user_id = #{userId}
+    </select>
+
     <resultMap id="PetPostVOMap" type="com.kmbeast.pojo.vo.PetPostVO">
         <!-- 基础字段 -->
         <id column="id" property="id"/>

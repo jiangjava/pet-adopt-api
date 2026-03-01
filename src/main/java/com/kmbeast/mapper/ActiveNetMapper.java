@@ -51,4 +51,6 @@ public interface ActiveNetMapper extends BaseMapper<ActiveNet> {
      */
     List<ScoreVO> queryScore(@Param(value = "contentType") String contentType);
 
+    List<ActiveNet> listChart(ActiveNetQueryDto activeNetQueryDto);
+
 }
