@@ -1,12 +1,8 @@
 package com.kmbeast.mapper;
 
-import com.kmbeast.pojo.dto.EvaluationsQueryDto;
 import com.kmbeast.pojo.dto.PetTypeQueryDto;
-import com.kmbeast.pojo.entity.Evaluations;
-import com.kmbeast.pojo.entity.EvaluationsUpvote;
 import com.kmbeast.pojo.entity.PetType;
-import com.kmbeast.pojo.vo.CommentChildVO;
-import com.kmbeast.pojo.vo.CommentParentVO;
+import com.kmbeast.pojo.vo.ChartVO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -29,5 +25,7 @@ public interface PetTypeMapper {
     List<PetType> query(PetTypeQueryDto petTypeQueryDto);
 
     Integer queryCount(PetTypeQueryDto petTypeQueryDto);
+
+    List<ChartVO> petTypeCount();
 
 }

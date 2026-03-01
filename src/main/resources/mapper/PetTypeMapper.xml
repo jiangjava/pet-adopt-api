@@ -7,51 +7,64 @@
         VALUES (#{id}, #{name})
     </insert>
 
-    <update id="update" >
+    <update id="update">
         UPDATE pet_type
         <set>
             <if test="name != null and name != ''">name = #{name},</if>
+
         </set>
+
         WHERE id = #{id}
     </update>
 
-    <delete id="deleteById" >
-        DELETE FROM pet_type
-        WHERE   id = #{id}
+    <delete id="deleteById">
+        DELETE
+        FROM pet_type
+        WHERE id = #{id}
     </delete>
 
     <!--查询数据总项-->
-    <select id="query"  resultMap="BaseResultMap" parameterType="com.kmbeast.pojo.dto.PetTypeQueryDto">
+    <select id="query" resultMap="BaseResultMap" parameterType="com.kmbeast.pojo.dto.PetTypeQueryDto">
 
         SELECT pt.id,pt.name
         FROM pet_type pt
         <where>
             <if test="name != null and name != ''">
-                AND pt.name LIKE concat('%',#{name}, '%')
+                AND pt.name LIKE concat('%',#{name},'%')
             </if>
+
         </where>
+
         <if test="current != null and size != null">
             LIMIT #{current},#{size}
         </if>
 
     </select>
 
-    <!--查询数据总项-->
+    <!--满足分页条件的数据总项-->
     <select id="queryCount" resultType="integer">
 
         SELECT COUNT(*)
         FROM pet_type pt
         <where>
             <if test="name != null and name != ''">
-                AND pt.name LIKE concat('%',#{name}, '%')
+                AND pt.name LIKE concat('%',#{name},'%')
             </if>
+
         </where>
 
     </select>
+
     <select id="queryByName" resultMap="BaseResultMap">
-        SELECT pt.id,pt.name
+        SELECT pt.id, pt.name
         FROM pet_type pt
-        where pt.name = #{name}
+        WHERE pt.name = #{name}
+    </select>
+
+    <select id="petTypeCount" resultType="com.kmbeast.pojo.vo.ChartVO">
+        SELECT pt.name,
+               (SELECT COUNT(p.id) FROM pet p WHERE p.pet_type_id = pt.id) AS `count`
+        FROM pet_type pt
     </select>
 
     <!-- 通用查询映射结果 -->
@@ -59,5 +72,6 @@
         <id column="id" property="id"/>
         <result column="name" property="name"/>
     </resultMap>
+
 
 </mapper>

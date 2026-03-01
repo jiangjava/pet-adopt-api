@@ -40,6 +40,10 @@
                 AND pao.status = #{status}
             </if>
 
+            <if test="startTime != null and endTime != null">
+                AND pao.create_time BETWEEN #{startTime} AND #{endTime}
+            </if>
+
         </where>
 
         <if test="current != null and size != null">
@@ -64,6 +68,10 @@
 
             <if test="status != null">
                 AND pao.status = #{status}
+            </if>
+
+            <if test="startTime != null and endTime != null">
+                AND pao.create_time BETWEEN #{startTime} AND #{endTime}
             </if>
 
         </where>

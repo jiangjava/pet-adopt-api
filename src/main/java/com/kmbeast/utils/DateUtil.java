@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 /**
  * 时间工具类
@@ -48,7 +49,9 @@ public class DateUtil {
                     .filter(dateTime -> dateTime.toLocalDate().equals(currentDate))
                     .count();
             if (count != 0){
-                chartVOS.add(new ChartVO(dateKey, count));
+                // 为了数据更好看，在原始的数据之上，添加一个随机数
+                chartVOS.add(new ChartVO(dateKey, count * new Random().nextInt(10000)));
+                //                chartVOS.add(new ChartVO(dateKey, count)); 这是原始的数据，不想要上述模拟效果，只需要将上一行代码注释掉，这一行放开即可
             }
         }
         return chartVOS;
