@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * 宠物领养订单业务逻辑实现类
@@ -55,10 +56,23 @@ public class PetAdoptOrderServiceImpl extends ServiceImpl<PetAdoptOrderMapper, P
         // 收货地址校验
         Address address = addressMapper.selectById(petAdoptOrder.getAddressId());
         AssertUtils.notNull(address, "收货地址信息异常");
+        // 宠物现在绑定的订单
+        PetAdoptOrderQueryDto petAdoptOrderQueryDto = new PetAdoptOrderQueryDto();
+        petAdoptOrderQueryDto.setPetId(petAdoptOrder.getPetId());
+        List<PetAdoptOrderVO> petAdoptOrderVOS = this.baseMapper.list(petAdoptOrderQueryDto);
+        if (!petAdoptOrderVOS.isEmpty()) {
+            for (PetAdoptOrderVO petAdoptOrderVO : petAdoptOrderVOS) {
+                AssertUtils.isTrue(
+                        !Objects.equals(petAdoptOrderVO.getStatus(), PetAdoptOrderStatus.REPLYING.getStatus()),
+                        "已有用户正在申请领养该宠物，请关注后续情况"
+                );
+            }
+        }
         // 创建订单信息
         petAdoptOrder.setStatus(PetAdoptOrderStatus.REPLYING.getStatus()); // 初始领养订单生成，是申请中状态
         petAdoptOrder.setUserId(LocalThreadHolder.getUserId()); // 设置用户ID
         petAdoptOrder.setCreateTime(LocalDateTime.now()); // 设置创建时间
+        petAdoptOrder.setPostNumber(1); // 初次提交1次
         petAdoptOrder.setIsAgainPost(IsAgainPostEnum.ORIGIN_REPLY.getStatus()); // 设置为初次提交状态
         save(petAdoptOrder);
         return ApiResult.success("宠物订单领养成功，请耐心等待审核");
@@ -119,7 +133,7 @@ public class PetAdoptOrderServiceImpl extends ServiceImpl<PetAdoptOrderMapper, P
         PetAdoptOrder adoptOrder = getById(petAdoptOrder.getId());
         AssertUtils.notNull(adoptOrder, "查询订单信息异常");
         adoptOrder.setIsAgainPost(IsAgainPostEnum.AGAIN_REPLY.getStatus()); // 设置为再次提交状态\
-        adoptOrder.setPostNumber(adoptOrder.getPostNumber() == null ? 1 : adoptOrder.getPostNumber() + 1);
+        adoptOrder.setPostNumber(adoptOrder.getPostNumber() + 1);
         return update(adoptOrder);
     }
 }
