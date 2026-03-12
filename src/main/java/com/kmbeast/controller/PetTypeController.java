@@ -1,6 +1,7 @@
 package com.kmbeast.controller;
 
 import com.kmbeast.aop.Pager;
+import com.kmbeast.pojo.api.ApiResult;
 import com.kmbeast.pojo.api.Result;
 import com.kmbeast.pojo.dto.*;
 import com.kmbeast.pojo.entity.PetType;
@@ -66,6 +67,11 @@ public class PetTypeController {
         return petTypeService.query(petTypeQueryDto);
     }
 
+    @GetMapping("/listAll")   // 新接口
+    public Result<List<PetType>> listAll() {
+        List<PetType> list = petTypeService.getAllTypes();  // 走代理，缓存生效
+        return ApiResult.success(list);
+    }
 
 }
 

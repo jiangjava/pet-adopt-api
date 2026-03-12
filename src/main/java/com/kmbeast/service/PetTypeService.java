@@ -17,4 +17,6 @@ public interface PetTypeService {
     Result<String> deleteById(Integer id);
 
     Result<List<PetType>> query(PetTypeQueryDto petTypeQueryDto);
+
+    List<PetType> getAllTypes();
 }

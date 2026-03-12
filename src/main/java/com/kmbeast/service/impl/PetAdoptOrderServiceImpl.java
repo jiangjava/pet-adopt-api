@@ -18,12 +18,16 @@ import com.kmbeast.pojo.vo.PetAdoptOrderVO;
 import com.kmbeast.pojo.vo.PetVO;
 import com.kmbeast.service.PetAdoptOrderService;
 import com.kmbeast.utils.AssertUtils;
+import org.redisson.api.RLock;
+import org.redisson.api.RedissonClient;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 宠物领养订单业务逻辑实现类
@@ -37,6 +41,8 @@ public class PetAdoptOrderServiceImpl extends ServiceImpl<PetAdoptOrderMapper, P
     private AddressMapper addressMapper;
     @Resource
     private UserMapper userMapper;
+    @Autowired
+    private RedissonClient redissonClient;
 
     /**
      * 宠物领养订单生成
@@ -49,33 +55,60 @@ public class PetAdoptOrderServiceImpl extends ServiceImpl<PetAdoptOrderMapper, P
         AssertUtils.notNull(petAdoptOrder.getPetId(), "宠物ID不能为空");
         AssertUtils.notNull(petAdoptOrder.getAddressId(), "收货地址不能为空");
         AssertUtils.hasText(petAdoptOrder.getDetail(), "证明材料不能为空");
-        // 宠物信息校验
-        PetVO petVO = petMapper.getById(petAdoptOrder.getPetId());
-        AssertUtils.notNull(petVO, "宠物信息异常");
-        AssertUtils.isTrue(!petVO.getIsAdopt(), "宠物已被领养");
-        // 收货地址校验
-        Address address = addressMapper.selectById(petAdoptOrder.getAddressId());
-        AssertUtils.notNull(address, "收货地址信息异常");
-        // 宠物现在绑定的订单
-        PetAdoptOrderQueryDto petAdoptOrderQueryDto = new PetAdoptOrderQueryDto();
-        petAdoptOrderQueryDto.setPetId(petAdoptOrder.getPetId());
-        List<PetAdoptOrderVO> petAdoptOrderVOS = this.baseMapper.list(petAdoptOrderQueryDto);
-        if (!petAdoptOrderVOS.isEmpty()) {
-            for (PetAdoptOrderVO petAdoptOrderVO : petAdoptOrderVOS) {
-                AssertUtils.isTrue(
-                        !Objects.equals(petAdoptOrderVO.getStatus(), PetAdoptOrderStatus.REPLYING.getStatus()),
-                        "已有用户正在申请领养该宠物，请关注后续情况"
-                );
+
+        // 1. 定义分布式锁的 key（粒度：宠物ID）
+        String lockKey = "lock:adopt:pet:" + petAdoptOrder.getPetId();
+        RLock lock = redissonClient.getLock(lockKey);
+
+        try {
+            // 2. 尝试获取锁，等待 3 秒，租约 10 秒（Redisson 会自动续期，租约时间可适当设置）
+            boolean isLocked = lock.tryLock(3, 10, TimeUnit.SECONDS);
+            if (!isLocked) {
+                // 获取锁失败，说明有其他请求正在处理同一宠物，提示用户稍后重试
+                return ApiResult.error("系统繁忙，请稍后重试");
+            }
+
+            // 3. 获取锁成功，开始执行核心业务逻辑（所有对共享资源的访问都在锁内）
+            // 3.1 宠物信息校验
+            PetVO petVO = petMapper.getById(petAdoptOrder.getPetId());
+            AssertUtils.notNull(petVO, "宠物信息异常");
+            AssertUtils.isTrue(!petVO.getIsAdopt(), "宠物已被领养");
+
+            // 3.2 收货地址校验
+            Address address = addressMapper.selectById(petAdoptOrder.getAddressId());
+            AssertUtils.notNull(address, "收货地址信息异常");
+
+            // 3.3 检查宠物是否已有正在申请的订单
+            PetAdoptOrderQueryDto petAdoptOrderQueryDto = new PetAdoptOrderQueryDto();
+            petAdoptOrderQueryDto.setPetId(petAdoptOrder.getPetId());
+            List<PetAdoptOrderVO> petAdoptOrderVOS = this.baseMapper.list(petAdoptOrderQueryDto);
+            if (!petAdoptOrderVOS.isEmpty()) {
+                for (PetAdoptOrderVO petAdoptOrderVO : petAdoptOrderVOS) {
+                    AssertUtils.isTrue(
+                            !Objects.equals(petAdoptOrderVO.getStatus(), PetAdoptOrderStatus.REPLYING.getStatus()),
+                            "已有用户正在申请领养该宠物，请关注后续情况"
+                    );
+                }
+            }
+
+            // 3.4 创建订单信息
+            petAdoptOrder.setStatus(PetAdoptOrderStatus.REPLYING.getStatus()); // 初始状态：申请中
+            petAdoptOrder.setUserId(LocalThreadHolder.getUserId()); // 设置用户ID
+            petAdoptOrder.setCreateTime(LocalDateTime.now()); // 设置创建时间
+            petAdoptOrder.setPostNumber(1); // 初次提交1次
+            petAdoptOrder.setIsAgainPost(IsAgainPostEnum.ORIGIN_REPLY.getStatus()); // 设置为初次提交状态
+            save(petAdoptOrder);
+
+            return ApiResult.success("宠物订单领养成功，请耐心等待审核");
+        }  catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            return ApiResult.error("系统异常，请稍后重试");
+        } finally{
+            // 4. 释放锁（只有当前线程持有锁时才释放）
+            if (lock.isHeldByCurrentThread()) {
+                lock.unlock();
             }
         }
-        // 创建订单信息
-        petAdoptOrder.setStatus(PetAdoptOrderStatus.REPLYING.getStatus()); // 初始领养订单生成，是申请中状态
-        petAdoptOrder.setUserId(LocalThreadHolder.getUserId()); // 设置用户ID
-        petAdoptOrder.setCreateTime(LocalDateTime.now()); // 设置创建时间
-        petAdoptOrder.setPostNumber(1); // 初次提交1次
-        petAdoptOrder.setIsAgainPost(IsAgainPostEnum.ORIGIN_REPLY.getStatus()); // 设置为初次提交状态
-        save(petAdoptOrder);
-        return ApiResult.success("宠物订单领养成功，请耐心等待审核");
     }
 
     /**

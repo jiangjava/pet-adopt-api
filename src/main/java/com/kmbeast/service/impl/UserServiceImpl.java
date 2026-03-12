@@ -10,6 +10,7 @@ import com.kmbeast.pojo.entity.User;
 import com.kmbeast.pojo.vo.ChartVO;
 import com.kmbeast.pojo.vo.TokenResponseVO;
 import com.kmbeast.pojo.vo.UserVO;
+import com.kmbeast.service.NoticeService;
 import com.kmbeast.service.UserService;
 import com.kmbeast.utils.AssertUtils;
 import com.kmbeast.utils.DateUtil;
@@ -70,7 +71,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public Result<Object> login(UserLoginDto userLoginDTO) {
         AssertUtils.hasText(userLoginDTO.getAccount(), "账号不能为空");
-        AssertUtils.hasText(userLoginDTO.getAccount(), "密码不能为空");
+        AssertUtils.hasText(userLoginDTO.getPassword(), "密码不能为空");
         User user = userMapper.getUserByAccount(userLoginDTO.getAccount());
         AssertUtils.isTrue(user != null, "账户不存在");
         AssertUtils.equals(userLoginDTO.getPassword(), user.getPassword(), "密码错误");

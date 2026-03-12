@@ -7,6 +7,8 @@ import com.kmbeast.pojo.dto.PetTypeQueryDto;
 import com.kmbeast.pojo.entity.PetType;
 import com.kmbeast.service.PetTypeService;
 import com.kmbeast.utils.AssertUtils;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -20,6 +22,8 @@ public class PetTypeServiceImpl implements PetTypeService {
 
     @Resource
     private PetTypeMapper petTypeMapper;
+    @Resource
+    private PetTypeService petTypeService;
 
     /**
     * 宠物类别新增
@@ -27,6 +31,7 @@ public class PetTypeServiceImpl implements PetTypeService {
     * @return Result<String>后台通用返回封装类
     * */
     @Override
+    @CacheEvict(value = "petType", allEntries = true)
     public Result<String> save(PetType petType) {
         //确保传进来的宠物名不能为空
         AssertUtils.hasText(petType.getName(),"宠物类别名不能为空");
@@ -44,6 +49,7 @@ public class PetTypeServiceImpl implements PetTypeService {
      * @return Result<String>后台通用返回封装类
      * */
     @Override
+    @CacheEvict(value = "petType", allEntries = true)
     public Result<String> update(PetType petType) {
         //确保传进来的宠物名不能为空
         AssertUtils.hasText(petType.getName(),"宠物类别名不能为空");
@@ -60,6 +66,7 @@ public class PetTypeServiceImpl implements PetTypeService {
      * @return Result<String>后台通用返回封装类
      * */
     @Override
+    @CacheEvict(value = "petType", allEntries = true)
     public Result<String> deleteById(Integer id) {
         petTypeMapper.deleteById(id);
         return ApiResult.success("宠物类别删除成功");
@@ -72,10 +79,18 @@ public class PetTypeServiceImpl implements PetTypeService {
      * */
     @Override
     public Result<List<PetType>> query(PetTypeQueryDto petTypeQueryDto) {
+        petTypeService.getAllTypes();
         //查询符合条件的总条数 - 前端分页用的
         Integer count = petTypeMapper.queryCount(petTypeQueryDto);
         //查符合条件的数据项
         List<PetType> petTypeList = petTypeMapper.query(petTypeQueryDto);
         return ApiResult.success(petTypeList, count);
+    }
+
+    @Override
+    @Cacheable(value = "petType", key = "'all'")
+    public List<PetType> getAllTypes() {
+        PetTypeQueryDto dto = new PetTypeQueryDto();
+        return petTypeMapper.query(dto);
     }
 }

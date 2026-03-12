@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
@@ -17,9 +18,11 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @TableName(value = "notice")//标识对应的数据库表
-public class Notice {/**
+public class Notice implements Serializable {
+    private static final long serialVersionUID = 1L;
+    /**
     公告信息表主键ID
-*/
+    */
     @TableId(type = IdType.AUTO)
     private Integer id;
     /**

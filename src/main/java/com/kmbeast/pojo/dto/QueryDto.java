@@ -1,5 +1,7 @@
 package com.kmbeast.pojo.dto;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.kmbeast.common.json.LenientIntegerDeserializer;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -13,8 +15,11 @@ import java.time.LocalDateTime;
 @ToString
 @Builder
 public class QueryDto {
+    @JsonDeserialize(using = LenientIntegerDeserializer.class)
     private Integer id; // ID
+    @JsonDeserialize(using = LenientIntegerDeserializer.class)
     private Integer current; // 当前页
+    @JsonDeserialize(using = LenientIntegerDeserializer.class)
     private Integer size; //页面数据大小
     private LocalDateTime startTime; //开始时间
     private LocalDateTime endTime; //结束时间

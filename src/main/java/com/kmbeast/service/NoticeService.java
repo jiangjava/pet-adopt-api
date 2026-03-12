@@ -17,4 +17,6 @@ public interface NoticeService  extends IService<Notice>{
     Result<String> update(Notice notice);
 
     Result<List<NoticeListItemVO>> query(NoticeQueryDto noticeQueryDto);
+
+    Result<String> deleteById(Integer id);
 }

@@ -1,8 +1,6 @@
 package com.kmbeast.controller;
 
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.kmbeast.aop.Pager;
-import com.kmbeast.mapper.NoticeMapper;
 import com.kmbeast.pojo.api.ApiResult;
 import com.kmbeast.pojo.api.Result;
 import com.kmbeast.pojo.dto.NoticeQueryDto;
@@ -19,7 +17,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/notice")
-public class NoticeController extends ServiceImpl<NoticeMapper, Notice> implements NoticeService {
+public class NoticeController {
 
     @Resource
     private NoticeService noticeService;
@@ -58,8 +56,7 @@ public class NoticeController extends ServiceImpl<NoticeMapper, Notice> implemen
     @ResponseBody
     @DeleteMapping(value = "/{id}")
     public Result<String> deleteById(@PathVariable Integer id) {
-        noticeService.removeById(id);
-        return ApiResult.success("公告删除成功");
+        return noticeService.deleteById(id);
     }
 
     /**

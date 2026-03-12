@@ -57,6 +57,13 @@
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-pool2</artifactId>
         </dependency>
+        <!--Redisson 依赖-->
+        <dependency>
+            <groupId>org.redisson</groupId>
+            <!-- 适配 Spring Boot 的 starter 版本，自动兼容依赖 -->
+            <artifactId>redisson-spring-boot-starter</artifactId>
+            <version>3.13.6</version>
+        </dependency>
         <!--数据库链接-->
         <dependency>
             <groupId>mysql</groupId>
