@@ -18,6 +18,11 @@ import com.kmbeast.pojo.vo.ScoreVO;
 import com.kmbeast.service.PetService;
 import com.kmbeast.utils.AssertUtils;
 import com.kmbeast.utils.UserBasedCFUtil;
+import org.redisson.api.RBloomFilter;
+import org.redisson.api.RLock;
+import org.redisson.api.RedissonClient;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -25,12 +30,13 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /**
  * 宠物信息业务逻辑实现类
  *
- * @author B站「程序员辰星」原创出品
+ * @author 江出品
  */
 @Service
 public class PetServiceImpl implements PetService {
@@ -39,6 +45,12 @@ public class PetServiceImpl implements PetService {
     private PetMapper petMapper;
     @Resource
     private ActiveNetMapper activeNetMapper;
+    @Autowired
+    private RBloomFilter<Integer> petIdBloomFilter;
+    @Autowired
+    private RedisTemplate<String, Object> redisTemplate;
+    @Autowired
+    private RedissonClient redissonClient;
 
     /**
      * 宠物信息新增
@@ -104,7 +116,15 @@ public class PetServiceImpl implements PetService {
      */
     @Override
     public Result<PetVO> getById(Integer id) {
-        PetVO petVO = petMapper.getById(id);
+        // 1. 通过缓存方法获取宠物
+        Pet pet = getCachedPetById(id);
+        // 2. 判断是否存在
+        if (pet == null || pet.getId() == null) {
+            return ApiResult.error("宠物不存在");
+        }
+        // 3. 转换为 PetVO（需要实现转换方法）
+        PetVO petVO = convertToVO(pet);
+
         // 浏览逻辑实现
         ActiveNetQueryDto activeNetQueryDto = new ActiveNetQueryDto();
         activeNetQueryDto.setUserId(LocalThreadHolder.getUserId()); // 设置上用户ID
@@ -132,6 +152,12 @@ public class PetServiceImpl implements PetService {
      */
     @Override
     public Result<PetVO> viewById(Integer id) {
+        // 1. 通过缓存方法获取宠物
+        Pet pet = getCachedPetById(id);
+        // 2. 判断是否存在
+        if (pet == null || pet.getId() == null) {
+            return ApiResult.error("宠物不存在");
+        }
         return ApiResult.success(petMapper.getById(id));
     }
 
@@ -233,5 +259,68 @@ public class PetServiceImpl implements PetService {
                 .collect(Collectors.toList());
         List<PetListItemVO> petListItemVOS = petMapper.queryListItemByIds(petIds);
         return ApiResult.success(petListItemVOS);
+    }
+
+    /**
+     * 带布隆过滤器和缓存的宠物查询
+     */
+    public Pet getCachedPetById(Integer id) {
+        // 1. 布隆过滤器拦截
+        if (!petIdBloomFilter.contains(id)) {
+            return null; // 肯定不存在
+        }
+
+        // 2. 查缓存
+        String cacheKey = "pet:" + id;
+        Pet pet = (Pet) redisTemplate.opsForValue().get(cacheKey);
+        if (pet != null) {
+            return pet;
+        }
+
+        // 3. 分布式锁回源查数据库
+        String lockKey = "lock:pet:" + id;
+        RLock lock = redissonClient.getLock((lockKey));
+        try {
+            if (lock.tryLock(2, 30, TimeUnit.SECONDS)) {
+                // 双重检查缓存
+                pet = (Pet) redisTemplate.opsForValue().get(cacheKey);
+                if (pet != null) {
+                    return pet;
+                }
+
+                // 查询数据库
+                pet = petMapper.selectById(id);
+
+                // 4. 写入缓存（空值缓存5分钟，正常缓存30分钟）
+                if (pet == null) {
+                    redisTemplate.opsForValue().set(cacheKey, new Pet(), 5, TimeUnit.MINUTES);
+                } else {
+                    redisTemplate.opsForValue().set(cacheKey, pet, 30, TimeUnit.MINUTES);
+                }
+                return pet;
+            } else {
+                Thread.sleep(100);
+                return getCachedPetById(id); // 递归重试
+            }
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            return null;
+        } finally {
+            if (lock.isHeldByCurrentThread()) {
+                lock.unlock();
+            }
+        }
+    }
+
+    //用于将 Pet 转换为 PetVO
+    private PetVO convertToVO(Pet pet) {
+        if (pet == null) {
+            return null;
+        }
+        PetVO vo = new PetVO();
+        // 使用 Spring BeanUtils 复制相同属性
+        org.springframework.beans.BeanUtils.copyProperties(pet, vo);
+        // 如果有特殊字段需要处理，在这里补充
+        return vo;
     }
 }

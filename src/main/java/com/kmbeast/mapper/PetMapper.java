@@ -60,9 +60,17 @@ public interface PetMapper {
      */
     Integer queryCount(PetQueryDto petQueryDto);
 
+
     List<Integer> queryAllIds();
 
 
     List<PetListItemVO> queryListItemByIds(@Param(value = "ids") List<Integer> recommendItems);
 
+
+    /**
+     * 根据ID查询宠物实体
+     * @param id 宠物ID
+     * @return Pet实体
+     */
+    Pet selectById(@Param("id") Integer id);
 }

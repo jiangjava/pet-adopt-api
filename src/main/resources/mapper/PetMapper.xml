@@ -45,6 +45,11 @@
         WHERE id = #{id}
     </delete>
 
+    <!--查询pet实体-->
+    <select id="selectById" resultType="com.kmbeast.pojo.entity.Pet">
+        SELECT * FROM pet WHERE id = #{id}
+    </select>
+
     <!--查询数据总项-->
     <select id="getById" resultMap="BaseResultMap">
 

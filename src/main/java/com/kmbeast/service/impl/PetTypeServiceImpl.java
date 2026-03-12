@@ -79,6 +79,7 @@ public class PetTypeServiceImpl implements PetTypeService {
      * */
     @Override
     public Result<List<PetType>> query(PetTypeQueryDto petTypeQueryDto) {
+        //缓存预热
         petTypeService.getAllTypes();
         //查询符合条件的总条数 - 前端分页用的
         Integer count = petTypeMapper.queryCount(petTypeQueryDto);
