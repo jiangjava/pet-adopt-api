@@ -64,6 +64,11 @@
             <artifactId>redisson-spring-boot-starter</artifactId>
             <version>3.13.6</version>
         </dependency>
+        <!--RabbitMQ 依赖-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-amqp</artifactId>
+        </dependency>
         <!--数据库链接-->
         <dependency>
             <groupId>mysql</groupId>

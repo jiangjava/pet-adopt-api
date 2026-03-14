@@ -1,5 +1,6 @@
 package com.kmbeast.service.impl;
 
+import com.kmbeast.config.RabbitCacheConfig;
 import com.kmbeast.mapper.PetTypeMapper;
 import com.kmbeast.pojo.api.ApiResult;
 import com.kmbeast.pojo.api.Result;
@@ -7,6 +8,9 @@ import com.kmbeast.pojo.dto.PetTypeQueryDto;
 import com.kmbeast.pojo.entity.PetType;
 import com.kmbeast.service.PetTypeService;
 import com.kmbeast.utils.AssertUtils;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -17,6 +21,7 @@ import java.util.List;
 /**
 * 宠物类别业务逻辑实现类
 * */
+@Slf4j
 @Service
 public class PetTypeServiceImpl implements PetTypeService {
 
@@ -24,6 +29,8 @@ public class PetTypeServiceImpl implements PetTypeService {
     private PetTypeMapper petTypeMapper;
     @Resource
     private PetTypeService petTypeService;
+    @Autowired
+    private RabbitTemplate rabbitTemplate;  // 注入 RabbitTemplate
 
     /**
     * 宠物类别新增
@@ -57,6 +64,19 @@ public class PetTypeServiceImpl implements PetTypeService {
         PetType petTypeEntity = petTypeMapper.queryByName(petType.getName());
         AssertUtils.isTrue(petTypeEntity == null,"宠物类别名已经存在");
         petTypeMapper.update(petType);
+
+        // 更新数据库
+        petTypeMapper.update(petType);
+        //    发送缓存删除消息（异步）
+        //    由于 @CacheEvict 清除了整个区域，我们可以发送一个代表“清空类别缓存”的消息
+        //    例如约定一个特殊的 key，消费者收到后执行对应的清理逻辑
+        String cacheRegion = "petType";  // 或者用具体的 key，但 allEntries 需要清空多个 key
+        rabbitTemplate.convertAndSend(
+                RabbitCacheConfig.CACHE_EXCHANGE,
+                RabbitCacheConfig.CACHE_ROUTING_KEY,
+                cacheRegion  // 发送区域标识，消费者根据此执行清空操作
+        );
+        log.info("已发送类别缓存清空消息: {}", cacheRegion);
         return ApiResult.success("宠物类别修改成功");
     }
 

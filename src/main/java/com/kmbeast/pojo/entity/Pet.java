@@ -1,10 +1,14 @@
 package com.kmbeast.pojo.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
@@ -13,11 +17,14 @@ import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Pet {
+@TableName("pet")
+public class Pet implements Serializable {
+    private static final long serialVersionUID = 1L;
 
     /**
      * 宠物信息表主键ID
      */
+    @TableId(type = IdType.AUTO)
     private Integer id;
     /**
      * 宠物名

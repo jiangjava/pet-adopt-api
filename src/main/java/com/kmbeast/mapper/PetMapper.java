@@ -1,5 +1,6 @@
 package com.kmbeast.mapper;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.kmbeast.pojo.dto.PetQueryDto;
 import com.kmbeast.pojo.entity.Pet;
 import com.kmbeast.pojo.vo.PetListItemVO;
@@ -13,7 +14,7 @@ import java.util.List;
  * 宠物持久化接口
  */
 @Mapper
-public interface PetMapper {
+public interface PetMapper extends BaseMapper<Pet> {
 
     /**
      * 宠物信息新增
