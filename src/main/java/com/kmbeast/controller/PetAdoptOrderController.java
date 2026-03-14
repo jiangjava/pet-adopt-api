@@ -1,5 +1,6 @@
 package com.kmbeast.controller;
 
+import com.kmbeast.aop.Idempotent;
 import com.kmbeast.aop.Pager;
 import com.kmbeast.context.LocalThreadHolder;
 import com.kmbeast.pojo.api.ApiResult;
@@ -30,6 +31,7 @@ public class PetAdoptOrderController {
      * */
     @ResponseBody
     @PostMapping(value = "/save")
+    @Idempotent(key = "idempotentToken")
     public Result<String> save(@RequestBody PetAdoptOrder petAdoptOrder){
         return petAdoptOrderService.saveEntity(petAdoptOrder);
     }
@@ -62,7 +64,7 @@ public class PetAdoptOrderController {
      * 宠物领养订单查询
      * @param petAdoptOrderQueryDto 实体数据
      * @return Result<List<PetAdoptOrderVO>>通用返回封装类
-     * */
+     */
     @Pager
     @ResponseBody
     @PostMapping(value = "/queryUser")
